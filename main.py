@@ -15,47 +15,44 @@ import tweepy
 import telegram
 import time
 import argparse
-
-# Config Variables
-log_tweet           = 'log_tweet.txt'
-consumer_key        = 'consumer_key'
-consumer_secret     = 'consumer_secret'
-access_token        = 'access_token'
-access_token_secret = 'access_token_secret'
-twitter_target      = 'twitter_target'
-telegram_bot_token  = 'telegram_bot_token'
-chat_id             = 'telegram_channel_id'
+import os
+import config
 
 # Parsing argumen
 parser = argparse.ArgumentParser(description='Send video from Twitter to Telegram')
-parser.add_argument('--reset', action='store_true', help='Reset log_tweet file')
+parser.add_argument('--reset', action='store_true', help='Reset config.log_tweet file')
 args = parser.parse_args()
 
 # Check if reset argument is passed
 if args.reset:
-    # Reset file log_tweet
-    with open(log_tweet, 'w') as file:
+    # Reset file config.log_tweet
+    with open(config.log_tweet, 'w') as file:
         file.write('')  # Write empty string to reset file
 
+# Check if config.log_tweet file exists
+if not os.path.exists(config.log_tweet):
+    with open(config.log_tweet, 'w'):
+        pass
+
 # Read tweet ID that has been sent from file
-with open(log_tweet, 'r') as file:
+with open(config.log_tweet, 'r') as file:
     sent_tweet_ids = set(int(tweet_id.strip()) for tweet_id in file.readlines())
 
 # Auth to Twitter
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
+auth = tweepy.OAuthHandler(config.consumer_key, config.consumer_secret)
+auth.set_access_token(config.access_token, config.access_token_secret)
 
 # Create API Twitter object
 api = tweepy.API(auth)
 
 # Get tweets from target
 if sent_tweet_ids:
-    tweets = api.user_timeline(screen_name=twitter_target, count=200, include_rts=True, tweet_mode="extended", since_id=max(sent_tweet_ids))
+    tweets = api.user_timeline(screen_name=config.twitter_target, count=200, include_rts=True, tweet_mode="extended", since_id=max(sent_tweet_ids))
 else:
-    tweets = api.user_timeline(screen_name=twitter_target, count=200, include_rts=True, tweet_mode="extended")
+    tweets = api.user_timeline(screen_name=config.twitter_target, count=200, include_rts=True, tweet_mode="extended")
 
 # Auth to Telegram
-bot = telegram.Bot(token=telegram_bot_token)
+bot = telegram.Bot(token=config.telegram_bot_token)
 
 # Async function to send video to Telegram channel
 async def send_video_to_telegram(chat_id, video_url, idx):
@@ -96,11 +93,11 @@ async def main():
                   if tweet.id not in sent_tweet_ids:
                       try:
                           # Send video to Telegram channel with timeout
-                          if await send_video_to_telegram(chat_id=chat_id, video_url=video_url, idx=idx):
+                          if await send_video_to_telegram(chat_id=config.chat_id, video_url=video_url, idx=idx):
                               successful += 1
 
                               # Save tweet ID to file after successfully sent
-                              with open(log_tweet, 'a') as file:
+                              with open(config.log_tweet, 'a') as file:
                                   file.write(f'{tweet.id}\n')
                           else:
                               failed += 1 # Increment failed count if sending video failed

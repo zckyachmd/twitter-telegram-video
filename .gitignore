@@ -1,2 +1,11 @@
 # Ignore .DS_Store files from macOS
 .DS_Store
+
+# Ignore __pycache__
+__pycache__/
+
+# Ignore config.py
+config.py
+
+# Ignore log_tweet.txt
+log_tweet.txt
