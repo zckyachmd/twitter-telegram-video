@@ -1,6 +1,4 @@
-<p align="center">
 # Twitter Telegram Video Bot
-</p>
 
 Twitter Telegram Video is a Python script that automates grabbing videos from a Twitter account and sending them to a Telegram channel. This script is designed to run as a standalone bot that can be scheduled to run periodically, allowing you to automatically share videos from a Twitter account to your Telegram channel.
 
@@ -27,9 +25,6 @@ pip install -r requirements.txt
 3. Create a file named config.py in the root directory of the project, and define the following variables with your Twitter and Telegram API credentials:
 
 ```bash
-# File logs tweet
-log_tweet = 'file_name.txt'
-
 # Twitter API keys and access tokens
 consumer_key = "your_consumer_key"
 consumer_secret = "your_consumer_secret"
