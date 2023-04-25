@@ -1,0 +1,5 @@
+asyncio==3.4.3
+tweepy==4.1.0
+python-telegram-bot==13.7
+telegram==0.0.1
+argparse==1.4.0
