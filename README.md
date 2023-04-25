@@ -30,9 +30,11 @@ consumer_key = "your_consumer_key"
 consumer_secret = "your_consumer_secret"
 access_token = "your_access_token"
 access_token_secret = "your_access_token_secret"
+twitter_target = 'twitter_target'
 
 # Telegram bot token
 telegram_bot_token = "your_telegram_bot_token"
+chat_id = "telegram_channel_id"
 ```
 
 4. Run the script using Python, for example:
